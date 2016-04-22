@@ -4,6 +4,10 @@ using App.Shared.Network;
 using App.Shared.Config;
 using App.Shared.PrivateConfig;
 using Android.App;
+using Android.Content;
+using App.Shared.Strings;
+using App.Shared.Notes;
+using System.Collections;
 
 namespace Droid
 {
@@ -167,30 +171,99 @@ namespace Droid
                             // the context is the button they clicked (watch or take notes)
                             int buttonChoice = (int)context;
 
-                            // 0 is listen
+                            // 0 is podcast
                             if ( buttonChoice == 0 )
                             {
-                                ListenPage.MediaUrl = DetailsPage.Series.Messages[ buttonId ].AudioUrl;
-                                ListenPage.ShareUrl = DetailsPage.Series.Messages[ buttonId ].ShareUrl;
-                                ListenPage.Name = DetailsPage.Series.Messages[ buttonId ].Name;
-                                PresentFragment( ListenPage, true );
+                                // creating alert dialog
+                                AlertDialog.Builder builder = new AlertDialog.Builder( source.Activity );
+                                builder.SetTitle( MessagesStrings.Podcast_Action_Title );
+                                builder.SetMessage( MessagesStrings.Podcast_Action_Subtitle );
+
+                                // using an arraylist versus an array because we don't
+                                // know the length of the array until runtime
+                                ArrayList optionList = new ArrayList();
+
+                                if ( !string.IsNullOrEmpty( DetailsPage.Series.Messages[buttonId].AudioUrl ) )
+                                {
+                                    optionList.Add( MessagesStrings.Podcast_Action_Audio );
+                                }
+
+                                if ( !string.IsNullOrEmpty( DetailsPage.Series.Messages[buttonId].WatchUrl ) )
+                                {
+                                    optionList.Add( MessagesStrings.Podcast_Action_Video );
+                                }
+
+                                optionList.Add( GeneralStrings.Cancel );
+
+                                string[] strings = optionList.ToArray( typeof( string ) ) as string[];
+
+                                builder.SetItems( strings, delegate ( object sender, DialogClickEventArgs clickArgs )
+                                {
+                                    Rock.Mobile.Threading.Util.PerformOnUIThread( delegate
+                                    {
+                                        switch ( clickArgs.Which )
+                                        {
+                                            // Listen
+                                            case 0:
+                                                {
+                                                    ListenPage.MediaUrl = DetailsPage.Series.Messages[buttonId].WatchUrl;
+                                                    ListenPage.ShareUrl = DetailsPage.Series.Messages[buttonId].ShareUrl;
+                                                    ListenPage.Name = DetailsPage.Series.Messages[buttonId].Name;
+                                                    PresentFragment( ListenPage, true );
+                                                    break;
+                                                }
+
+                                            // Watch
+                                            case 1:
+                                                {
+                                                    WatchPage.MediaUrl = DetailsPage.Series.Messages[buttonId].WatchUrl;
+                                                    WatchPage.ShareUrl = DetailsPage.Series.Messages[buttonId].ShareUrl;
+                                                    WatchPage.Name = DetailsPage.Series.Messages[buttonId].Name;
+                                                    PresentFragment( WatchPage, true );
+                                                    break;
+                                                }
+
+                                            // Cancel
+                                            case 2:
+                                                {
+                                                    break;
+                                                }
+                                        }
+                                    } );
+                                } );
+
+                                builder.Show();
                             }
-                            // 1 is watch
+                            // 1 is read
                             else if ( buttonChoice == 1 )
-                            {
-                                WatchPage.MediaUrl = DetailsPage.Series.Messages[ buttonId ].WatchUrl;
-                                WatchPage.ShareUrl = DetailsPage.Series.Messages[ buttonId ].ShareUrl;
-                                WatchPage.Name = DetailsPage.Series.Messages[ buttonId ].Name;
-                                PresentFragment( WatchPage, true );
-                            }
-                            // 2 is read
-                            else if ( buttonChoice == 2 )
                             {
                                 NotesPage.NoteUrl = DetailsPage.Series.Messages[ buttonId ].NoteUrl;
                                 NotesPage.NoteName = DetailsPage.Series.Messages[ buttonId ].Name;
                                 NotesPage.StyleSheetDefaultHostDomain = RockLaunchData.Instance.Data.NoteDB.HostDomain;
 
                                 PresentFragment( NotesPage, true );
+                            }
+                            // 2 is share
+                            else if ( buttonChoice == 2 )
+                            {
+                                NotesPage.NoteName = DetailsPage.Series.Messages[buttonId].Name;
+
+                                Intent sendIntent = new Intent();
+                                sendIntent.SetAction( Intent.ActionSend );
+
+                                // build a nice subject line
+                                string subject = string.Format( MessagesStrings.Watch_Share_Subject, NotesPage.NoteName );
+                                sendIntent.PutExtra( Intent.ExtraSubject, subject );
+
+                                // build message body
+                                string htmlStream = MessagesStrings.Watch_Share_Header_Html + 
+                                    string.Format( MessagesStrings.Watch_Share_Body_Html, 
+                                        DetailsPage.Series.Messages[buttonId].WatchUrl, NotesPage.NoteName );
+
+                                sendIntent.PutExtra( Intent.ExtraText, Android.Text.Html.FromHtml( htmlStream ) );
+                                sendIntent.SetType( "text/html" );
+
+                                source.StartActivity( sendIntent );
                             }
                         }
                         else if ( source == NotesPage )

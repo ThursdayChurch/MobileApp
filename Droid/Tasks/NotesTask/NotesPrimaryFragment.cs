@@ -345,7 +345,7 @@ namespace Droid
                     WatchButton.Icon.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( PrivateControlStylingConfig.Icon_Font_Secondary ), TypefaceStyle.Normal );
                     WatchButton.Icon.SetTextSize( Android.Util.ComplexUnitType.Dip, PrivateNoteConfig.Series_Table_IconSize );
                     WatchButton.Icon.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( ControlStylingConfig.TextField_PlaceholderTextColor ) );
-                    WatchButton.Icon.Text = PrivateNoteConfig.Series_Table_Watch_Icon;
+                    WatchButton.Icon.Text = PrivateNoteConfig.Series_Table_Podcast_Icon;
 
                     WatchButton.Label.SetTypeface( Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( ControlStylingConfig.Font_Regular ), TypefaceStyle.Normal );
                     WatchButton.Label.SetTextSize( Android.Util.ComplexUnitType.Dip, ControlStylingConfig.Small_FontSize );

@@ -373,19 +373,19 @@ namespace App.Shared
             public const int UserNote_CloseIconSize = 38;
 
             /// <summary>
-            /// The icon to use representing "Listen to this Message"
+            /// The icon to use representing "Listen/Watch to this Message"
             /// </summary>
-            public const string Series_Table_Listen_Icon = "";
-
-            /// <summary>
-            /// The icon to use representing "Watch this Message"
-            /// </summary>
-            public const string Series_Table_Watch_Icon = "";
+            public const string Series_Table_Podcast_Icon = "";
 
             /// <summary>
             /// The icon to use representing the action to "Take Notes"
             /// </summary>
             public const string Series_Table_TakeNotes_Icon = "";
+
+            /// <summary>
+            /// The icon to use representing "Share this Message"
+            /// </summary>
+            public const string Series_Table_Share_Icon = "";
 
             /// <summary>
             /// The icon to use representing that tapping the element will take you to a new page. (Like a > symbol)

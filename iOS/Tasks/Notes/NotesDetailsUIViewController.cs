@@ -13,6 +13,7 @@ using App.Shared.Analytics;
 using App.Shared.Network;
 using App.Shared.PrivateConfig;
 using Rock.Mobile.IO;
+using App.Shared.Strings;
 
 namespace iOS
 {
@@ -107,9 +108,9 @@ namespace iOS
                 public UILabel Title { get; set; }
                 public UILabel Date { get; set; }
                 public UILabel Speaker { get; set; }
-                public UIButton ListenButton { get; set; }
-                public UIButton WatchButton { get; set; }
+                public UIButton PodcastButton { get; set; }
                 public UIButton TakeNotesButton { get; set; }
+                public UIButton ShareButton { get; set; }
 
                 public UIView Seperator { get; set; }
 
@@ -142,32 +143,32 @@ namespace iOS
                     Speaker.LineBreakMode = UILineBreakMode.TailTruncation;
                     AddSubview( Speaker );
 
-                    ListenButton = new UIButton( UIButtonType.Custom );
-                    ListenButton.TouchUpInside += (object sender, EventArgs e) => { Parent.RowButtonClicked( RowIndex, 0 ); };
-                    ListenButton.Layer.AnchorPoint = CGPoint.Empty;
-                    ListenButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( PrivateControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.Details_Table_IconSize );
-                    ListenButton.SetTitle( PrivateNoteConfig.Series_Table_Listen_Icon, UIControlState.Normal );
-                    ListenButton.BackgroundColor = UIColor.Clear;
-                    ListenButton.SizeToFit( );
-                    AddSubview( ListenButton );
-
-                    WatchButton = new UIButton( UIButtonType.Custom );
-                    WatchButton.TouchUpInside += (object sender, EventArgs e) => { Parent.RowButtonClicked( RowIndex, 1 ); };
-                    WatchButton.Layer.AnchorPoint = CGPoint.Empty;
-                    WatchButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( PrivateControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.Details_Table_IconSize );
-                    WatchButton.SetTitle( PrivateNoteConfig.Series_Table_Watch_Icon, UIControlState.Normal );
-                    WatchButton.BackgroundColor = UIColor.Clear;
-                    WatchButton.SizeToFit( );
-                    AddSubview( WatchButton );
+                    PodcastButton = new UIButton( UIButtonType.Custom );
+                    PodcastButton.TouchUpInside += (object sender, EventArgs e) => { Parent.RowButtonClicked( RowIndex, 0 ); };
+                    PodcastButton.Layer.AnchorPoint = CGPoint.Empty;
+                    PodcastButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( PrivateControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.Details_Table_IconSize );
+                    PodcastButton.SetTitle( PrivateNoteConfig.Series_Table_Podcast_Icon, UIControlState.Normal );
+                    PodcastButton.BackgroundColor = UIColor.Clear;
+                    PodcastButton.SizeToFit( );
+                    AddSubview( PodcastButton );
 
                     TakeNotesButton = new UIButton( UIButtonType.Custom );
-                    TakeNotesButton.TouchUpInside += (object sender, EventArgs e) => { Parent.RowButtonClicked( RowIndex, 2 ); };
+                    TakeNotesButton.TouchUpInside += (object sender, EventArgs e) => { Parent.RowButtonClicked( RowIndex, 1 ); };
                     TakeNotesButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( PrivateControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.Details_Table_IconSize );
                     TakeNotesButton.SetTitle( PrivateNoteConfig.Series_Table_TakeNotes_Icon, UIControlState.Normal );
                     TakeNotesButton.Layer.AnchorPoint = CGPoint.Empty;
                     TakeNotesButton.BackgroundColor = UIColor.Clear;
                     TakeNotesButton.SizeToFit( );
                     AddSubview( TakeNotesButton );
+
+                    ShareButton = new UIButton( UIButtonType.Custom );
+                    ShareButton.TouchUpInside += ( object sender, EventArgs e ) => { Parent.RowButtonClicked( RowIndex, 2 ); };
+                    ShareButton.Layer.AnchorPoint = CGPoint.Empty;
+                    ShareButton.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( PrivateControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.Details_Table_IconSize );
+                    ShareButton.SetTitle( PrivateNoteConfig.Series_Table_Share_Icon, UIControlState.Normal );
+                    ShareButton.BackgroundColor = UIColor.Clear;
+                    ShareButton.SizeToFit();
+                    AddSubview( ShareButton );
 
                     Seperator = new UIView( );
                     AddSubview( Seperator );
@@ -181,36 +182,22 @@ namespace iOS
                     Title.Hidden = hidden;
                     Date.Hidden = hidden;
                     Speaker.Hidden = hidden;
-                    ListenButton.Hidden = hidden;
-                    WatchButton.Hidden = hidden;
+                    PodcastButton.Hidden = hidden;
                     TakeNotesButton.Hidden = hidden;
+                    ShareButton.Hidden = hidden;
                 }
 
-                public void ToggleListenButton( bool enabled )
+                public void TogglePodcastButton( bool enabled )
                 {
                     if ( enabled == true )
                     {
-                        ListenButton.Enabled = true;
-                        ListenButton.SetTitleColor( Rock.Mobile.UI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ), UIControlState.Normal );
+                        PodcastButton.Enabled = true;
+                        PodcastButton.SetTitleColor( Rock.Mobile.UI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ), UIControlState.Normal );
                     }
                     else
                     {
-                        ListenButton.Enabled = false;
-                        ListenButton.SetTitleColor( UIColor.DarkGray, UIControlState.Normal );
-                    }
-                }
-
-                public void ToggleWatchButton( bool enabled )
-                {
-                    if ( enabled == true )
-                    {
-                        WatchButton.Enabled = true;
-                        WatchButton.SetTitleColor( Rock.Mobile.UI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ), UIControlState.Normal );
-                    }
-                    else
-                    {
-                        WatchButton.Enabled = false;
-                        WatchButton.SetTitleColor( UIColor.DarkGray, UIControlState.Normal );
+                        PodcastButton.Enabled = false;
+                        PodcastButton.SetTitleColor( UIColor.DarkGray, UIControlState.Normal );
                     }
                 }
 
@@ -225,6 +212,20 @@ namespace iOS
                     {
                         TakeNotesButton.Enabled = false;
                         TakeNotesButton.SetTitleColor( UIColor.DarkGray, UIControlState.Normal );
+                    }
+                }
+
+                public void ToggleShareButton( bool enabled )
+                {
+                    if ( enabled == true )
+                    {
+                        ShareButton.Enabled = true;
+                        ShareButton.SetTitleColor( Rock.Mobile.UI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ), UIControlState.Normal );
+                    }
+                    else
+                    {
+                        ShareButton.Enabled = false;
+                        ShareButton.SetTitleColor( UIColor.DarkGray, UIControlState.Normal );
                     }
                 }
             }
@@ -403,7 +404,7 @@ namespace iOS
 
 
                     nfloat rowHeight = PrivateNoteConfig.Series_Main_CellHeight;
-                    nfloat availableWidth = cell.Bounds.Width - cell.ListenButton.Bounds.Width - cell.WatchButton.Bounds.Width - cell.TakeNotesButton.Bounds.Width;
+                    nfloat availableWidth = cell.Bounds.Width - cell.PodcastButton.Bounds.Width - cell.TakeNotesButton.Bounds.Width - cell.ShareButton.Bounds.Width;
 
                     // Position the Title & Date in the center to the right of the image
                     nfloat totalTextHeight = ( cell.Title.Bounds.Height + cell.Date.Bounds.Height + cell.Speaker.Bounds.Height ) - 6;
@@ -428,41 +429,31 @@ namespace iOS
 
 
                     // Buttons
-                    cell.TakeNotesButton.Frame = new CGRect( cell.Bounds.Width - cell.TakeNotesButton.Bounds.Width, 
-                        ( rowHeight - cell.TakeNotesButton.Bounds.Height ) / 2, 
-                        cell.TakeNotesButton.Bounds.Width, 
+                    cell.ShareButton.Frame = new CGRect( cell.Bounds.Width - cell.ShareButton.Bounds.Width,
+                        ( rowHeight - cell.ShareButton.Bounds.Height ) / 2,
+                        cell.ShareButton.Bounds.Width,
+                        cell.ShareButton.Bounds.Height );
+
+                    cell.TakeNotesButton.Frame = new CGRect( cell.ShareButton.Frame.Left - cell.TakeNotesButton.Bounds.Width,
+                        ( rowHeight - cell.TakeNotesButton.Bounds.Height ) / 2,
+                        cell.TakeNotesButton.Bounds.Width,
                         cell.TakeNotesButton.Bounds.Height );
 
-                    cell.WatchButton.Frame = new CGRect( cell.TakeNotesButton.Frame.Left - cell.WatchButton.Bounds.Width, 
-                        ( rowHeight - cell.WatchButton.Bounds.Height ) / 2, 
-                        cell.WatchButton.Bounds.Width, 
-                        cell.WatchButton.Bounds.Height );
+                    cell.PodcastButton.Frame = new CGRect( cell.TakeNotesButton.Frame.Left - cell.PodcastButton.Bounds.Width,
+                       ( rowHeight - cell.PodcastButton.Bounds.Height ) / 2,
+                       cell.PodcastButton.Bounds.Width,
+                       cell.PodcastButton.Bounds.Height );
 
-                    cell.ListenButton.Frame = new CGRect( cell.WatchButton.Frame.Left - cell.ListenButton.Bounds.Width, 
-                        ( rowHeight - cell.ListenButton.Bounds.Height ) / 2, 
-                        cell.ListenButton.Bounds.Width, 
-                        cell.ListenButton.Bounds.Height );
-
-
-
+                   
                     // disable the button if there's no listen URL
-                    if ( string.IsNullOrEmpty( Series.Messages[ row ].AudioUrl ) )
+                    if ( string.IsNullOrEmpty( Series.Messages[ row ].AudioUrl ) &&
+                        string.IsNullOrEmpty( Series.Messages[ row ].WatchUrl ) )
                     {
-                        cell.ToggleListenButton( false );
+                        cell.TogglePodcastButton( false );
                     }
                     else
                     {
-                        cell.ToggleListenButton( true );
-                    }
-
-                    // disable the button if there's no watch URL
-                    if ( string.IsNullOrEmpty( Series.Messages[ row ].WatchUrl ) )
-                    {
-                        cell.ToggleWatchButton( false );
-                    }
-                    else
-                    {
-                        cell.ToggleWatchButton( true );
+                        cell.TogglePodcastButton( true );
                     }
 
                     // disable the button if there's no note URL
@@ -473,6 +464,16 @@ namespace iOS
                     else
                     {
                         cell.ToggleTakeNotesButton( true );
+                    }
+
+                    // disable the button if there's no watch URL to share
+                    if ( string.IsNullOrEmpty( Series.Messages[row].WatchUrl ) )
+                    {
+                        cell.ToggleShareButton( false );
+                    }
+                    else
+                    {
+                        cell.ToggleShareButton( true );
                     }
 
                     //PendingCellHeight = rowHeight;
@@ -626,43 +627,97 @@ namespace iOS
 
         public void RowClicked( int row, int buttonIndex )
         {
-           // 0 would be the audio button
+           // 0 would be the podcast button
             if ( buttonIndex == 0 )
             {
-                NotesWatchUIViewController viewController = new NotesWatchUIViewController( );
-                viewController.MediaUrl = Series.Messages[ row ].AudioUrl;
-                viewController.ShareUrl = Series.Messages[ row ].ShareUrl;
-                viewController.Name = Series.Messages[ row ].Name;
-                viewController.AudioOnly = true;
-
-                Task.PerformSegue( this, viewController );
+                SelectPodcastFormat( row );
             }
-            // 1 would be the watch button
+            // 1 would be the Notes button
             else if ( buttonIndex == 1 )
-            {
-                NotesWatchUIViewController viewController = new NotesWatchUIViewController( );
-                viewController.MediaUrl = Series.Messages[ row ].WatchUrl;
-                viewController.ShareUrl = Series.Messages[ row ].ShareUrl;
-                viewController.Name = Series.Messages[ row ].Name;
-                viewController.AudioOnly = false;
-
-                Task.PerformSegue( this, viewController );
-            }
-            // and 1 would be the second button, which is Notes
-            else if ( buttonIndex == 2 )
             {
                 // maybe technically a hack...we know our parent is a NoteTask,
                 // so cast it so we can use the existing NotesViewController.
                 NotesTask noteTask = Task as NotesTask;
                 if ( noteTask != null )
                 {
-                    noteTask.NoteController.NoteName = Series.Messages[ row ].Name;
-                    noteTask.NoteController.NoteUrl = Series.Messages[ row ].NoteUrl;
+                    noteTask.NoteController.NoteName = Series.Messages[row].Name;
+                    noteTask.NoteController.NoteUrl = Series.Messages[row].NoteUrl;
                     noteTask.NoteController.StyleSheetDefaultHostDomain = RockLaunchData.Instance.Data.NoteDB.HostDomain;
 
                     Task.PerformSegue( this, noteTask.NoteController );
                 }
             }
+            // 2 would be the share button
+            else if ( buttonIndex == 2 )
+            {
+                string noteString = MessagesStrings.Watch_Share_Header_Html + string.Format( MessagesStrings.Watch_Share_Body_Html, Series.Messages[row].ShareUrl, Series.Messages[row].Name );
+
+                var items = new NSObject[] { new NSString( noteString ) };
+
+                UIActivityViewController shareController = new UIActivityViewController( items, null );
+                shareController.SetValueForKey( new NSString( MessagesStrings.Watch_Share_Subject ), new NSString( "subject" ) );
+
+                shareController.ExcludedActivityTypes = new NSString[] { UIActivityType.PostToFacebook,
+                UIActivityType.AirDrop,
+                UIActivityType.PostToTwitter,
+                UIActivityType.CopyToPasteboard,
+                UIActivityType.Message };
+
+                // if devices like an iPad want an anchor, set it
+                if ( shareController.PopoverPresentationController != null )
+                {
+                    shareController.PopoverPresentationController.SourceView = Task.NavToolbar;
+                }
+                PresentViewController( shareController, true, null );
+            }
+        }
+
+        void SelectPodcastFormat( int row )
+        {
+
+            UIAlertController actionsheet = UIAlertController.Create( MessagesStrings.Podcast_Action_Title, 
+                                                                      MessagesStrings.Podcast_Action_Subtitle, 
+                                                                      UIAlertControllerStyle.ActionSheet );
+
+            // setup Audio Only
+            if ( !string.IsNullOrEmpty( Series.Messages[row].AudioUrl ) )
+            {
+                UIAlertAction audioOption = UIAlertAction.Create( MessagesStrings.Podcast_Action_Audio, UIAlertActionStyle.Default, delegate ( UIAlertAction obj )
+                {
+                    NotesWatchUIViewController viewController = new NotesWatchUIViewController();
+                    viewController.MediaUrl = Series.Messages[row].AudioUrl;
+                    viewController.ShareUrl = Series.Messages[row].ShareUrl;
+                    viewController.Name = Series.Messages[row].Name;
+                    viewController.AudioOnly = true;
+
+                    Task.PerformSegue( this, viewController );
+                } );
+
+                actionsheet.AddAction( audioOption );
+            }
+
+            // setup Video
+            if ( !string.IsNullOrEmpty( Series.Messages[row].WatchUrl ) )
+            {
+                UIAlertAction videoOption = UIAlertAction.Create( MessagesStrings.Podcast_Action_Video, UIAlertActionStyle.Default, delegate ( UIAlertAction obj )
+                {
+                    NotesWatchUIViewController viewController = new NotesWatchUIViewController();
+                    viewController.MediaUrl = Series.Messages[row].WatchUrl;
+                    viewController.ShareUrl = Series.Messages[row].ShareUrl;
+                    viewController.Name = Series.Messages[row].Name;
+                    viewController.AudioOnly = false;
+
+                    Task.PerformSegue( this, viewController );
+                } );
+
+                actionsheet.AddAction( videoOption );
+            }
+
+            // setup Cancel
+            UIAlertAction cancelAction = UIAlertAction.Create( GeneralStrings.Cancel, UIAlertActionStyle.Cancel, delegate { } );
+
+            actionsheet.AddAction( cancelAction );
+            PresentViewController( actionsheet, true, null );
         }
 	}
 }

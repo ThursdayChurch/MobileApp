@@ -109,7 +109,7 @@ namespace iOS
                     AddSubview( Speaker );
 
 
-                    // Watch & Take Notes Buttons
+                    // Watch Button
                     WatchButton = new UIButton( UIButtonType.Custom );
                     WatchButton.TouchUpInside += (object sender, EventArgs e) => { Parent.WatchButtonClicked( ); };
                     WatchButton.Layer.AnchorPoint = CGPoint.Empty;
@@ -122,7 +122,7 @@ namespace iOS
                     WatchButtonIcon = new UILabel( );
                     WatchButton.AddSubview( WatchButtonIcon );
                     WatchButtonIcon.Font = Rock.Mobile.PlatformSpecific.iOS.Graphics.FontManager.GetFont( PrivateControlStylingConfig.Icon_Font_Secondary, PrivateNoteConfig.Series_Table_IconSize );
-                    WatchButtonIcon.Text = PrivateNoteConfig.Series_Table_Watch_Icon;
+                    WatchButtonIcon.Text = PrivateNoteConfig.Series_Table_Podcast_Icon;
                     WatchButtonIcon.SizeToFit( );
 
                     WatchButtonLabel = new UILabel( );
@@ -132,7 +132,7 @@ namespace iOS
                     WatchButtonLabel.SizeToFit( );
 
 
-
+                    // Take Notes
                     TakeNotesButton = new UIButton( UIButtonType.Custom );
                     TakeNotesButton.TouchUpInside += (object sender, EventArgs e) => { Parent.TakeNotesButtonClicked( ); };
                     TakeNotesButton.Layer.AnchorPoint = CGPoint.Empty;

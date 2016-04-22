@@ -254,6 +254,11 @@ namespace App.Shared
             public const string Series_Table_Watch = "Watch";
             public const string Series_Table_TakeNotes = "Take Notes";
 
+            public const string Podcast_Action_Title = "Select Format";
+            public const string Podcast_Action_Subtitle = "Select a podcast format.";
+            public const string Podcast_Action_Audio = "Audio Only";
+            public const string Podcast_Action_Video = "Video";
+
             public const string Series_Table_PreviousMessages = "Previous Message Series";
 
             public const string UserNote_Placeholder = "Enter note";

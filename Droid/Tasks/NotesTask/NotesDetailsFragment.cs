@@ -132,22 +132,14 @@ namespace Droid
                     messageItem.Date.Text = ParentFragment.Series.Messages[ position ].Date;
                     messageItem.Speaker.Text = ParentFragment.Series.Messages[ position ].Speaker;
 
-                    if ( string.IsNullOrEmpty( ParentFragment.Series.Messages[ position ].AudioUrl ) == true )
+                    if ( string.IsNullOrEmpty( ParentFragment.Series.Messages[ position ].AudioUrl ) == true && 
+                        string.IsNullOrEmpty( ParentFragment.Series.Messages[ position ].WatchUrl ) == true )
                     {
-                        messageItem.ToggleListenButton( false );
+                        messageItem.TogglePodcastButton( false );
                     }
                     else
                     {
-                        messageItem.ToggleListenButton( true );
-                    }
-
-                    if ( string.IsNullOrEmpty( ParentFragment.Series.Messages[ position ].WatchUrl ) == true )
-                    {
-                        messageItem.ToggleWatchButton( false );
-                    }
-                    else
-                    {
-                        messageItem.ToggleWatchButton( true );
+                        messageItem.TogglePodcastButton( true );
                     }
 
                     if ( string.IsNullOrEmpty( ParentFragment.Series.Messages[ position ].NoteUrl ) == true )
@@ -244,9 +236,9 @@ namespace Droid
                 public TextView Speaker { get; set; }
 
                 RelativeLayout ButtonFrameLayout { get; set; }
-                Button ListenButton { get; set; }
-                Button WatchButton { get; set; }
+                Button PodcastButton { get; set; }
                 Button TakeNotesButton { get; set; }
+                Button ShareButton { get; set; }
 
                 public NotesDetailsArrayAdapter ParentAdapter { get; set; }
                 public int Position { get; set; }
@@ -316,27 +308,16 @@ namespace Droid
 
                     Typeface buttonFontFace = Rock.Mobile.PlatformSpecific.Android.Graphics.FontManager.Instance.GetFont( PrivateControlStylingConfig.Icon_Font_Secondary );
 
-                    ListenButton = new Button( Rock.Mobile.PlatformSpecific.Android.Core.Context );
-                    ListenButton.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-                    ( (LinearLayout.LayoutParams)ListenButton.LayoutParameters ).Weight = 1;
-                    ( (LinearLayout.LayoutParams)ListenButton.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
-                    ListenButton.SetTypeface( buttonFontFace, TypefaceStyle.Normal );
-                    ListenButton.SetTextSize( Android.Util.ComplexUnitType.Dip, PrivateNoteConfig.Details_Table_IconSize );
-                    ListenButton.Text = PrivateNoteConfig.Series_Table_Listen_Icon;
-                    ListenButton.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ) );
-                    ListenButton.Background = null;
-                    buttonLayout.AddView( ListenButton );
-
-                    WatchButton = new Button( Rock.Mobile.PlatformSpecific.Android.Core.Context );
-                    WatchButton.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
-                    ( (LinearLayout.LayoutParams)WatchButton.LayoutParameters ).Weight = 1;
-                    ( (LinearLayout.LayoutParams)WatchButton.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
-                    WatchButton.SetTypeface( buttonFontFace, TypefaceStyle.Normal );
-                    WatchButton.SetTextSize( Android.Util.ComplexUnitType.Dip, PrivateNoteConfig.Details_Table_IconSize );
-                    WatchButton.Text = PrivateNoteConfig.Series_Table_Watch_Icon;
-                    WatchButton.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ) );
-                    WatchButton.Background = null;
-                    buttonLayout.AddView( WatchButton );
+                    PodcastButton = new Button( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    PodcastButton.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                    ( (LinearLayout.LayoutParams)PodcastButton.LayoutParameters ).Weight = 1;
+                    ( (LinearLayout.LayoutParams)PodcastButton.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
+                    PodcastButton.SetTypeface( buttonFontFace, TypefaceStyle.Normal );
+                    PodcastButton.SetTextSize( Android.Util.ComplexUnitType.Dip, PrivateNoteConfig.Details_Table_IconSize );
+                    PodcastButton.Text = PrivateNoteConfig.Series_Table_Podcast_Icon;
+                    PodcastButton.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ) );
+                    PodcastButton.Background = null;
+                    buttonLayout.AddView( PodcastButton );
 
                     TakeNotesButton = new Button( Rock.Mobile.PlatformSpecific.Android.Core.Context );
                     TakeNotesButton.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
@@ -349,51 +330,46 @@ namespace Droid
                     TakeNotesButton.Background = null;
                     buttonLayout.AddView( TakeNotesButton );
 
-                    ListenButton.Click += (object sender, EventArgs e ) =>
+                    ShareButton = new Button( Rock.Mobile.PlatformSpecific.Android.Core.Context );
+                    ShareButton.LayoutParameters = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent );
+                    ( (LinearLayout.LayoutParams)ShareButton.LayoutParameters ).Weight = 1;
+                    ( (LinearLayout.LayoutParams)ShareButton.LayoutParameters ).Gravity = GravityFlags.CenterVertical;
+                    ShareButton.SetTypeface( buttonFontFace, TypefaceStyle.Normal );
+                    ShareButton.SetTextSize( Android.Util.ComplexUnitType.Dip, PrivateNoteConfig.Details_Table_IconSize );
+                    ShareButton.Text = PrivateNoteConfig.Series_Table_Share_Icon;
+                    ShareButton.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ) );
+                    ShareButton.Background = null;
+                    buttonLayout.AddView( ShareButton );
+
+                    PodcastButton.Click += (object sender, EventArgs e ) =>
                         {
                             ParentAdapter.OnClick( Position, 0 );
                         };
 
-                    WatchButton.Click += (object sender, EventArgs e ) =>
+                    TakeNotesButton.Click += (object sender, EventArgs e ) =>
                         {
                             ParentAdapter.OnClick( Position, 1 );
                         };
 
-                    TakeNotesButton.Click += (object sender, EventArgs e ) =>
-                        {
-                            ParentAdapter.OnClick( Position, 2 );
-                        };
+                    ShareButton.Click += ( object sender, EventArgs e ) =>
+                    {
+                        ParentAdapter.OnClick( Position, 2 );
+                    };
                 }
 
-                public void ToggleListenButton( bool enabled )
+                public void TogglePodcastButton( bool enabled )
                 {
                     if ( enabled == true )
                     {
-                        ListenButton.Enabled = true;
-                        ListenButton.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ) );
+                        PodcastButton.Enabled = true;
+                        PodcastButton.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ) );
                     }
                     else
                     {
-                        ListenButton.Enabled = false;
+                        PodcastButton.Enabled = false;
 
                         uint disabledColor = Rock.Mobile.Graphics.Util.ScaleRGBAColor( ControlStylingConfig.TextField_PlaceholderTextColor, 2, false );
-                        ListenButton.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( disabledColor ) );
-                    }
-                }
-
-                public void ToggleWatchButton( bool enabled )
-                {
-                    if ( enabled == true )
-                    {
-                        WatchButton.Enabled = true;
-                        WatchButton.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ) );
-                    }
-                    else
-                    {
-                        WatchButton.Enabled = false;
-
-                        uint disabledColor = Rock.Mobile.Graphics.Util.ScaleRGBAColor( ControlStylingConfig.TextField_PlaceholderTextColor, 2, false );
-                        WatchButton.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( disabledColor ) );
+                        PodcastButton.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( disabledColor ) );
                     }
                 }
 
@@ -410,6 +386,22 @@ namespace Droid
                         
                         uint disabledColor = Rock.Mobile.Graphics.Util.ScaleRGBAColor( ControlStylingConfig.TextField_PlaceholderTextColor, 2, false );
                         TakeNotesButton.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( disabledColor ) );
+                    }
+                }
+
+                public void ToggleShareButton( bool enabled )
+                {
+                    if ( enabled == true )
+                    {
+                        ShareButton.Enabled = true;
+                        ShareButton.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( NoteConfig.Details_Table_IconColor ) );
+                    }
+                    else
+                    {
+                        ShareButton.Enabled = false;
+
+                        uint disabledColor = Rock.Mobile.Graphics.Util.ScaleRGBAColor( ControlStylingConfig.TextField_PlaceholderTextColor, 2, false );
+                        ShareButton.SetTextColor( Rock.Mobile.UI.Util.GetUIColor( disabledColor ) );
                     }
                 }
 
